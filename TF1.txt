@@ -8,7 +8,14 @@ from sklearn.compose import ColumnTransformer
 train = pd.read_csv("train.csv")
 test = pd.read_csv("test.csv")
 
+train_cols = list(train.columns)
+test_cols = list(test.columns)
+
+print([i for i in train if i not in test])
+print([i for i in test if i not in train])
+
 train = train.drop(["Id", "SalePrice"], axis=1)
+test = test.drop(["Id"], axis=1)
 
 cat_feets = train.select_dtypes(include="object").columns.tolist()
 cont_feets = train.select_dtypes(include=np.number).columns.tolist()
@@ -17,8 +24,17 @@ all_feets = cat_feets + cont_feets
 
 # Pipelines
 
-cats = Pipeline(steps=[("cat_ordenc", OrdinalEncoder(handle_unknown="value"))])
+cats = Pipeline(steps=[("cat_imp", SimpleImputer(strategy="most_frequent")), ("cat_enc", OrdinalEncoder())])
+conts = Pipeline(steps=[("cont_imp", SimpleImputer(missing_values=np.nan, strategy="median"))])
 
-conts = Pipeline(steps=[("cont_imp", SimpleImputer(missing_values=np.nan, strategy="median")]
+ctf = ColumnTransformer([("cat", cats, cat_feets), ("cont", conts, cont_feets)], remainder="passthrough")
+
+train_trans = ctf.fit_transform(train)
+print(train_trans[:10,:])
+
+test_trans = ctf.transform(test)
+print(test_trans[:10,:])
+
+
 
 
