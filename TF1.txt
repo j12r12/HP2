@@ -19,4 +19,6 @@ all_feets = cat_feets + cont_feets
 
 cats = Pipeline(steps=[("cat_ordenc", OrdinalEncoder(handle_unknown="value"))])
 
-print(cats)
+conts = Pipeline(steps=[("cont_imp", SimpleImputer(missing_values=np.nan, strategy="median")]
+
+
