@@ -8,8 +8,6 @@ from sklearn.compose import ColumnTransformer
 train = pd.read_csv("train.csv")
 test = pd.read_csv("test.csv")
 
-print(train.shape, test.shape)
-
 train = train.drop(["Id", "SalePrice"], axis=1)
 
 cat_feets = train.select_dtypes(include="object").columns.tolist()
@@ -17,4 +15,8 @@ cont_feets = train.select_dtypes(include=np.number).columns.tolist()
 
 all_feets = cat_feets + cont_feets
 
-print(cat_feets)
+# Pipelines
+
+cats = Pipeline(steps=[("cat_ordenc", OrdinalEncoder(handle_unknown="value"))])
+
+print(cats)
