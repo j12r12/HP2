@@ -4,6 +4,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error, r2_score
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
 
 def model_fit(model, X_train, y_train, X_val, y_val):
 	model.fit(X_train, y_train)
@@ -29,14 +30,21 @@ def plot_pi(pi_res, limit=None):
 		limit = len(pi_res)
 	pi_res_lim = pi_res.iloc[:limit]
 	pi_res_lim.plot.barh(x="features", y="imp", figsize=(10,6))
+	plt.title("Permutation Importances")
 	plt.show()
 	
 
+def get_fi(model, x):
+	return pd.DataFrame(np.stack([x.columns, model.feature_importances_], axis=1), columns=["features", "imp"]).sort_values(by="imp", ascending=False).reset_index(drop=True)
 
 
-
-
-
+def plot_fi(fi_res, limit=None):
+	if limit is None:
+		limit = len(fi_res)
+	fi_res_lim = fi_res.iloc[:limit]
+	fi_res_lim.plot.barh(x="features", y="imp", figsize=(10,6))
+	plt.title("Feature Importances")
+	plt.show()
 
 
 
@@ -44,3 +52,5 @@ if __name__ == "__main__":
 	model_fit()
 	get_perm_imp()
 	plot_pi()
+	get_fi()
+	plot_fi()

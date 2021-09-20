@@ -4,7 +4,7 @@ from sklearn.preprocessing import OrdinalEncoder, OneHotEncoder, LabelEncoder, S
 from sklearn.impute import SimpleImputer, MissingIndicator
 from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
-from funcs import model_fit, get_perm_imp, plot_pi
+from funcs import model_fit, get_perm_imp, plot_pi, get_fi, plot_fi
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
@@ -45,11 +45,22 @@ X_val_tf = pd.DataFrame(ctf.fit_transform(X_val), columns=all_feets)
 
 model_fit(rfr, X_train_tf , y_train, X_val_tf, y_val)
 
-bob = get_perm_imp(rfr, X_val_tf, y_val)
+pi = get_perm_imp(rfr, X_val_tf, y_val)
 
-print(bob)
+print(pi)
 
-plot_pi(bob, limit=30)
+plot_pi(pi, limit=30)
+
+fi = get_fi(rfr, X_val_tf)
+
+print(fi)
+
+plot_fi(fi, limit=30)
+
+
+
+
+
 
 
 
