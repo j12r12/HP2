@@ -5,6 +5,7 @@ from sklearn.metrics import mean_squared_error, r2_score
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+from sklearn.ensemble import RandomForestRegressor
 
 def model_fit(model, X_train, y_train, X_val, y_val):
 	model.fit(X_train, y_train)
@@ -47,6 +48,22 @@ def plot_fi(fi_res, limit=None):
 	plt.show()
 
 
+def optimum_feats(model, X_train, X_val, y_train, y_val, n_feats):
+	errors = []
+	pi = get_perm_imp(model, X_val, y_val)
+	for n in n_feats:
+		rf = RandomForestRegressor()
+		f = pi[:n].features.tolist()
+		rf.fit(X_train.loc[:,f], y_train)
+		preds_val = rf.predict(X_val.loc[:,f])
+		errors.append(mean_squared_error(y_val, preds_val))
+
+	plt.plot(n_feats, errors)
+	plt.show()
+
+		
+
+
 
 if __name__ == "__main__":
 	model_fit()
@@ -54,3 +71,4 @@ if __name__ == "__main__":
 	plot_pi()
 	get_fi()
 	plot_fi()
+	optimum_feats()

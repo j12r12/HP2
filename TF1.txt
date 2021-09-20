@@ -4,7 +4,7 @@ from sklearn.preprocessing import OrdinalEncoder, OneHotEncoder, LabelEncoder, S
 from sklearn.impute import SimpleImputer, MissingIndicator
 from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
-from funcs import model_fit, get_perm_imp, plot_pi, get_fi, plot_fi
+from funcs import model_fit, get_perm_imp, plot_pi, get_fi, plot_fi, optimum_feats
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
@@ -57,9 +57,17 @@ print(fi)
 
 plot_fi(fi, limit=30)
 
+n_feats = [5,8,12,17,20,25,28,32,40,50,60,70]
 
+optimum_feats(rfr, X_train_tf, X_val_tf, y_train, y_val, n_feats)
 
+to_keep = pi.iloc[:18].features.tolist()
+X_train_imp = X_train_tf[to_keep]
+X_val_imp = X_val_tf[to_keep]
 
+rf2 = RandomForestRegressor()
+
+model_fit(rf2, X_train_imp, y_train, X_val_imp, y_val)
 
 
 
